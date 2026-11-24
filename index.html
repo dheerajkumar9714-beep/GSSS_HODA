@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GSSS Hoda — Shala Darpan School Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f3ea; --surface:#ffffff; --surface-alt:#f0ead9; --text:#21312a; --dim:#5f6f66;
+  --border:#e2dac4; --accent:#bc3f2e; --accent-text:#ffffff; --gold:#e9a13b; --gold-soft:#fbeecd;
+  --ink:#173f35; --ink-deep:#102e27; --ink-text:#f4efe2;
+  --warn:#b45309; --warn-bg:#fdf3e3; --danger:#b91c1c; --danger-bg:#fbeaea; --ok:#177245; --ok-bg:#e6f4ea;
+  --radius:16px; --font-serif:'Source Serif 4',Georgia,serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#101713; --surface:#1b241e; --surface-alt:#263128; --text:#eef2ec; --dim:#a3b3a6; --border:#37463b;
+    --accent:#e0684f; --gold:#f2b33d; --gold-soft:#3a2c10; --ink:#0d2721; --ink-deep:#081b16;
+    --warn:#fbbf24; --danger:#f87171; --ok:#4ade80; }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-system,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.5}
+::-webkit-scrollbar{width:10px;height:10px} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px} ::-webkit-scrollbar-track{background:transparent}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.font-display{font-family:var(--font-serif)}
+.wrap{max-width:1152px;margin:0 auto;padding:0 16px}
+.wrap-narrow{max-width:896px;margin:0 auto;padding:0 16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(23,50,40,.07)}
+@media(min-width:640px){.card{padding:20px}}
+.btn-primary{display:inline-block;background:var(--accent);color:#fff;border:none;border-radius:999px;padding:8px 20px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 2px 6px rgba(120,40,25,.28);min-height:36px}
+.btn-primary:hover{opacity:.9}
+.btn-ghost{display:inline-block;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:999px;padding:8px 20px;font-size:14px;font-weight:500;cursor:pointer;min-height:36px}
+.btn-ghost:hover{background:var(--surface-alt)}
+.btn-danger{display:inline-block;background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger);border-radius:999px;padding:8px 20px;font-size:14px;font-weight:500;cursor:pointer;min-height:36px}
+.input{width:100%;border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text);padding:8px 12px;font-size:14px;box-shadow:inset 0 1px 3px rgba(16,24,20,.04)}
+.input:focus{border-color:var(--accent);outline:none}
+label.lbl{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);margin-bottom:4px}
+.kicker{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--accent)}
+.kicker-gold{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--gold)}
+.sec-title{font-family:var(--font-serif);font-size:30px;font-weight:600;margin:4px 0 8px}
+.sec-title .acc{font-style:italic;color:var(--accent)}
+.sec-title .acc-gold{font-style:italic;color:var(--gold)}
+.rule{height:4px;width:40px;border-radius:999px;background:var(--accent);margin-bottom:8px}
+.stat-card{position:relative;overflow:hidden}
+.stat-card:before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--gold)}
+.stat-label{font-size:12px;text-transform:uppercase;color:var(--dim)}
+.stat-value{font-size:30px;font-weight:600;font-variant-numeric:tabular-nums}
+table.tbl{border-collapse:collapse;width:100%;font-size:14px}
+table.tbl th{background:var(--surface-alt);text-align:left;padding:8px;border:1px solid var(--border);font-size:12px;text-transform:uppercase;color:var(--dim)}
+table.tbl td{padding:8px;border:1px solid var(--border)}
+table.tbl tr:hover td{background:var(--surface-alt)}
+.scrollbox{overflow:auto;max-height:75vh;border:1px solid var(--border);border-radius:12px}
+.pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600}
+.pill-ok{background:var(--ok-bg);color:var(--ok)} .pill-warn{background:var(--warn-bg);color:var(--warn)} .pill-danger{background:var(--danger-bg);color:var(--danger)} .pill-dim{background:var(--surface-alt);color:var(--dim)}
+.tab-btn{border:none;background:transparent;color:var(--dim);border-radius:999px;padding:8px 16px;font-size:14px;cursor:pointer;min-height:36px;white-space:nowrap}
+.tab-btn:hover{background:var(--surface-alt)}
+.tab-btn.active{background:var(--accent);color:#fff;font-weight:600;box-shadow:0 2px 6px rgba(120,40,25,.28)}
+.mark{width:42px;height:42px;border-radius:12px;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(120,40,25,.3);flex:none}
+.mark svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:1.8}
+.grid{display:grid;gap:16px}
+.bar-row{display:flex;align-items:center;gap:10px;font-size:13px;margin:4px 0}
+.bar-row .bl{width:96px;flex:none;color:var(--dim)}
+.bar-track{flex:1;height:12px;border-radius:999px;background:var(--surface-alt);overflow:hidden}
+.bar-fill{height:100%;background:var(--accent);border-radius:999px}
+.msg{border-radius:12px;padding:10px 14px;font-size:14px;margin:10px 0}
+.msg-err{background:var(--danger-bg);color:var(--danger)} .msg-ok{background:var(--ok-bg);color:var(--ok)} .msg-warn{background:var(--warn-bg);color:var(--warn)}
+select.input{appearance:auto}
+.small{font-size:13px;color:var(--dim)}
+.hidden{display:none!important}
+@media print{ .noprint{display:none!important} body{background:#fff} }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const $=(s,r=document)=>r.querySelector(s); const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s===null||s===undefined?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(path,opts={}){ const r=await fetch(path,{headers:{'Content-Type':'application/json'},...opts}); const d=await r.json().catch(()=>({})); if(!r.ok) throw new Error(d.error||('HTTP '+r.status)); return d; }
+function bookSvg(){return '<svg viewBox="0 0 24 24"><path d="M4 5.5C6.5 4 9.5 4 12 6c2.5-2 5.5-2 8-0.5v13c-2.5-1.5-5.5-1.5-8 .5-2.5-2-5.5-2-8-.5z"/><path d="M12 6v13"/></svg>'}
+let ME=null, HOME=null;
+
+// ---------------- Public home + sign-in ----------------
+async function renderPublic(){
+  const d = await api('/api/home'); HOME = d.content; const C = HOME;
+  const stats = C.stats.map(s=>`<div><div style="font-size:26px;font-weight:700">${esc(s.value)}</div><div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;opacity:.75">${esc(s.label)}</div></div>`).join('');
+  const facts = C.factCards.map(f=>`<div style="background:var(--surface);border-radius:16px;padding:14px;box-shadow:0 1px 4px rgba(23,50,40,.05)"><div style="font-size:11px;text-transform:uppercase;color:var(--dim)">${esc(f.label)}</div><div style="font-weight:500;margin-top:2px">${esc(f.value)}</div></div>`).join('');
+  const fac = C.facilities.map(f=>`<div style="background:var(--surface);border-radius:16px;padding:14px;box-shadow:0 1px 4px rgba(23,50,40,.05);display:flex;gap:12px;align-items:center"><div style="width:44px;height:44px;border-radius:999px;background:var(--gold-soft);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-weight:700;color:var(--ink)">${esc(f.label[0]||'')}</div><div><div style="font-weight:500">${esc(f.label)}</div><span class="pill ${f.status==='Yes'?'pill-ok':'pill-dim'}">${f.status==='Yes'?'Yes · उपलब्ध':'No'}</span></div></div>`).join('');
+  const staff = d.staff.map((t,i)=>`<div style="background:var(--surface);border-radius:16px;padding:14px;box-shadow:0 1px 4px rgba(23,50,40,.05)"><div style="font-size:12px;color:var(--dim)">${i+1}</div><div class="font-display" style="font-size:18px;font-weight:600">${esc(t.name)}</div><div class="small">${esc(t.post)}</div>${t.subject&&t.subject!=='---'?`<span class="pill" style="background:var(--gold-soft);color:var(--ink);margin-top:6px">${esc(t.subject)}</span>`:''}</div>`).join('');
+  $('#app').innerHTML = `
+  <header style="position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(23,50,40,.06)">
+    <div class="wrap" style="display:flex;align-items:center;gap:12px;padding-top:10px;padding-bottom:10px">
+      <div class="mark">${bookSvg()}</div>
+      <div style="flex:1"><div style="font-weight:700;font-size:16px">${esc(C.headerName)}</div><div style="font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--dim)">${esc(C.headerSub)}</div></div>
+      <nav class="noprint" style="display:flex;gap:18px;align-items:center">
+        <a href="#profile" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500">School Profile</a>
+        <a href="#staff" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500">Staff</a>
+        <a href="#contact" style="color:var(--text);text-decoration:none;font-size:14px;font-weight:500">Contact</a>
+        <a href="#signin" class="btn-primary" style="text-decoration:none">Sign In</a>
+      </nav>
+    </div>
+  </header>
+  <section style="background:var(--ink);color:var(--ink-text)">
+    <div class="wrap" style="display:grid;gap:24px;padding-top:36px;padding-bottom:36px" id="heroGrid">
+      <div>
+        <span class="pill" style="border:1px solid rgba(255,255,255,.25);color:var(--ink-text)"><span style="color:var(--gold)">●</span> ${esc(C.heroKicker)}</span>
+        <h1 style="font-size:44px;line-height:1.1;margin:16px 0 10px;font-weight:800">${esc(C.heroTitleMain)} <span class="font-display" style="font-style:italic;color:var(--gold)">${esc(C.heroTitleAccent)}</span></h1>
+        <p style="opacity:.9;max-width:560px">${esc(C.heroWelcome)}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 24px">
+          <a href="#signin" class="btn-primary" style="text-decoration:none">Sign in · लॉगिन →</a>
+          <a href="#profile" class="btn-ghost" style="text-decoration:none;background:transparent;color:var(--ink-text);border-color:rgba(255,255,255,.4)">School profile · विद्यालय परिचय</a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;border-top:1px solid rgba(255,255,255,.15);padding-top:16px">${stats}</div>
+      </div>
+      <div style="position:relative;min-height:200px">
+        <div style="border-radius:28px;background:linear-gradient(135deg,var(--gold-soft),var(--surface-alt));box-shadow:0 18px 40px rgba(0,0,0,.35);height:100%;min-height:230px;display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 200 130" style="width:75%"><rect x="30" y="45" width="140" height="70" rx="6" fill="#173f35"/><polygon points="20,48 100,15 180,48" fill="#bc3f2e"/><rect x="88" y="80" width="24" height="35" fill="#e9a13b"/><rect x="45" y="60" width="18" height="16" fill="#fbeecd"/><rect x="137" y="60" width="18" height="16" fill="#fbeecd"/><rect x="70" y="60" width="18" height="16" fill="#fbeecd"/><rect x="112" y="60" width="18" height="16" fill="#fbeecd"/></svg>
+        </div>
+        <div style="position:absolute;left:10px;bottom:10px;background:var(--gold);color:var(--ink-deep);border-radius:14px;padding:10px 14px;box-shadow:0 8px 20px rgba(0,0,0,.3)">
+          <div style="font-weight:700">${esc(C.heroBadgeTitle)}</div><div style="font-size:12px">${esc(C.heroBadgeSub)}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="signin" style="padding:44px 0">
+    <div class="wrap" style="display:grid;gap:24px" id="signinGrid">
+      <div>
+        <div class="kicker">${esc(C.signinKicker)}</div>
+        <h2 class="sec-title">${esc(C.signinHeadingMain)} <span class="acc">${esc(C.signinHeadingAccent)}</span> ${esc(C.signinHeadingTail)}</h2>
+        <div class="grid" style="gap:12px;margin-top:14px">
+          <div class="card"><div class="font-display" style="font-weight:600;font-size:18px">${esc(C.staffCardTitle)}</div><p class="small">${esc(C.staffCardText)}</p></div>
+          <div class="card"><div class="font-display" style="font-weight:600;font-size:18px">${esc(C.parentCardTitle)}</div><p class="small">${esc(C.parentCardText)}</p></div>
+        </div>
+        <p class="small" style="margin-top:12px">${esc(C.signinNote)}</p>
+      </div>
+      <div class="card" style="align-self:start">
+        <div class="font-display" style="font-size:22px;font-weight:600;margin-bottom:12px">Sign in · लॉगिन</div>
+        <form id="loginForm">
+          <label class="lbl">Login ID</label><input class="input" id="loginId" required autocomplete="username">
+          <label class="lbl" style="margin-top:12px">Password</label><input class="input" id="loginPw" type="password" required autocomplete="current-password">
+          <div id="loginErr"></div>
+          <button class="btn-primary" style="width:100%;margin-top:16px">Sign in</button>
+        </form>
+      </div>
+    </div>
+  </section>
+  <section id="profile" style="padding:10px 0 30px">
+    <div class="wrap">
+      <div class="kicker">${esc(C.profileKicker)}</div>
+      <h2 class="sec-title">${esc(C.profileHeadingMain)} <span class="acc">${esc(C.profileHeadingAccent)}</span></h2>
+      <p class="small">${esc(C.profileSub)}</p>
+      <p style="font-weight:600;margin:10px 0">${esc(C.schoolNameLine)}</p>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(210px,1fr))">${facts}</div>
+      <h3 class="font-display" style="margin:26px 0 10px;font-size:22px">${esc(C.facilitiesHeading)}</h3>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">${fac}</div>
+      <div style="background:var(--ink);color:var(--ink-text);border-radius:16px;padding:22px;margin-top:26px">
+        <div class="kicker-gold">${esc(C.streamsKicker)}</div>
+        ${C.streams.map(s=>`<div style="margin-top:8px"><span style="opacity:.8">${esc(s.label)}:</span> <span class="font-display" style="font-size:18px">${esc(s.value)}</span></div>`).join('')}
+      </div>
+    </div>
+  </section>
+  <section id="staff" style="padding:10px 0 36px">
+    <div class="wrap">
+      <div class="kicker">${esc(C.staffKicker)}</div>
+      <h2 class="sec-title">${esc(C.staffHeadingMain)} <span class="acc">${esc(C.staffHeadingAccent)}</span></h2>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">${staff}</div>
+      <p class="small" style="margin-top:12px">${esc(C.staffNote)}</p>
+    </div>
+  </section>
+  <section id="contact" style="background:var(--ink);color:var(--ink-text);padding:36px 0">
+    <div class="wrap">
+      <div class="kicker-gold">${esc(C.contactKicker)}</div>
+      <h2 class="sec-title" style="color:var(--ink-text)">${esc(C.contactHeadingMain)} <span class="acc-gold">${esc(C.contactHeadingAccent)}</span></h2>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:12px">
+        <div><div style="font-weight:600">${esc(C.contactAddressTitle)}</div><p style="white-space:pre-line;opacity:.9">${esc(C.contactAddress)}</p></div>
+        <div><div style="font-weight:600">${esc(C.contactEmailTitle)}</div><p style="opacity:.9">${esc(C.contactEmail)}</p><div style="font-weight:600;margin-top:8px">${esc(C.contactPrincipalTitle)}</div><p style="opacity:.9">${esc(C.contactPrincipal)}</p></div>
+        <div><div style="font-weight:600">${esc(C.contactCodesTitle)}</div><p style="white-space:pre-line;opacity:.9">${esc(C.contactCodes)}</p></div>
+      </div>
+    </div>
+  </section>
+  <footer style="background:var(--ink-deep);color:var(--ink-text);text-align:center;padding:20px 12px;font-size:12px">
+    <div class="font-display" style="font-size:14px">${esc(C.footerLine1)}</div>
+    <div style="opacity:.65;margin-top:4px">${esc(C.footerLine2)}</div>
+  </footer>`;
+  if (window.innerWidth >= 1024) { $('#heroGrid').style.gridTemplateColumns = '1.2fr 1fr'; $('#signinGrid').style.gridTemplateColumns = '1.1fr 1fr'; }
+  $('#loginForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    try {
+      const r = await api('/api/login', { method: 'POST', body: JSON.stringify({ loginId: $('#loginId').value, password: $('#loginPw').value }) });
+      ME = r; startShell();
+    } catch (err) { $('#loginErr').innerHTML = `<div class="msg msg-err">${esc(err.message)}</div>`; }
+  });
+}
+
+// ---------------- Shells ----------------
+const STAFF_TABS = [
+  ['dashboard','Dashboard · डैशबोर्ड'],['students','Students · विद्यार्थी'],['removed','Removed (TC/NSO) · हटाए गए'],
+  ['attendance','Attendance · उपस्थिति'],['results','Results · परिणाम'],['board','Board Results · बोर्ड परिणाम'],
+  ['pen','Update PEN · PEN अपडेट'],['teachers','Teachers · शिक्षक']];
+const ADMIN_TABS = [['upload','Upload · अपलोड'],['admit','Admit Card · एडमिट कार्ड'],['import','Import Centre · आयात केंद्र'],['parents','Parent Logins · अभिभावक'],['accounts','Accounts · खाते'],['home','Home Page · होम पेज']];
+const PARENT_TABS = [['child','My Child · मेरा बच्चा'],['presults','Results · परिणाम'],['pboard','Board Results · बोर्ड परिणाम']];
+let curTab = 'dashboard', viewSession = '2026-27';
+
+function startShell(){
+  if (ME.role === 'parent') { curTab = 'child'; renderParentShell(); }
+  else { curTab = 'dashboard'; renderStaffShell(); }
+  if (ME.mustChange) setTimeout(()=>alert('Pehla login hai — My Account tab se apna password badal dein.'), 300);
+}
+function topBar(tabs, narrow){
+  return `<header style="position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--border)">
+    <div class="${narrow?'wrap-narrow':'wrap'}">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0">
+        <div class="mark" style="width:38px;height:38px">${bookSvg()}</div>
+        <div style="flex:1"><div style="font-weight:700;font-size:14px">GSSS Hoda · राजकीय उच्च माध्यमिक विद्यालय होडा</div>
+        <div style="font-size:12px;color:var(--dim)">${esc(ME.name)} · ${esc(ME.role)} · ${esc(ME.loginId)}</div></div>
+        <span class="pill" style="background:var(--gold-soft);color:var(--ink)">Session ${esc(viewSession)}</span>
+        <button class="btn-ghost" id="signOut">Sign out</button>
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;padding-bottom:8px">
+        ${tabs.map(([k,l])=>`<button class="tab-btn ${curTab===k?'active':''}" data-tab="${k}">${l}</button>`).join('')}
+        <button class="tab-btn ${curTab==='account'?'active':''}" data-tab="account">My Account · खाता</button>
+      </div>
+    </div>
+  </header><main class="${narrow?'wrap-narrow':'wrap'}" style="padding-top:24px;padding-bottom:40px" id="page"></main>`;
+}
+function bindShell(renderFn){
+  $('#signOut').onclick = async ()=>{ await api('/api/logout',{method:'POST'}); ME=null; renderPublic(); };
+  $$('[data-tab]').forEach(b=>b.onclick=()=>{ curTab=b.dataset.tab; renderFn(); });
+}
+function secTitle(en, hi){ return `<div class="rule"></div><h2 style="font-family:var(--font-serif);font-size:24px;margin:0 0 14px">${en} · <span style="color:var(--dim)">${hi}</span></h2>`; }
+function msgBox(id){ return `<div id="${id}"></div>`; }
+function showMsg(id, text, kind='ok'){ const el=document.getElementById(id); if(el) el.innerHTML = `<div class="msg msg-${kind}">${esc(text)}</div>`; }
+
+function renderStaffShell(){
+  const tabs = ME.role==='admin' ? [...STAFF_TABS, ...ADMIN_TABS] : STAFF_TABS;
+  $('#app').innerHTML = topBar(tabs, false);
+  bindShell(renderStaffShell);
+  const fn = { dashboard: pageDashboard, students: pageStudents, removed: pageRemoved, attendance: pageAttendance, results: pageResults, board: pageBoard, pen: pagePen, teachers: pageTeachers, upload: pageUpload, admit: pageAdmit, import: pageImport, parents: pageParents, accounts: pageAccounts, home: pageHomeCms, account: pageAccount }[curTab];
+  (fn||pageDashboard)();
+}
+function renderParentShell(){
+  $('#app').innerHTML = topBar(PARENT_TABS, true);
+  bindShell(renderParentShell);
+  ({ child: pageMyChild, presults: pageParentResults, pboard: pageParentBoard, account: pageAccount }[curTab] || pageMyChild)();
+}
+
+// ---------------- Dashboard ----------------
+async function pageDashboard(){
+  const el = $('#page');
+  el.innerHTML = secTitle('School Dashboard','विद्यालय डैशबोर्ड') + `
+  <div class="card" style="margin-bottom:14px"><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">
+    ${[['Class','classNum','<option value="">All</option>'+Array.from({length:12},(_,i)=>`<option>${i+1}</option>`).join('')],
+       ['Gender','gender','<option value="">All</option><option value="M">Boys</option><option value="F">Girls</option>'],
+       ['Category','category','<option value="">All</option><option>GEN</option><option>ST</option><option>SC</option><option>OBC</option><option>SBC</option>'],
+       ['Session (enrolled in)','session','<option value="">Current</option>'],
+       ['BPL','bpl','<option value="">All</option><option>Y</option><option>N</option>'],
+       ['CWSN','cwsn','<option value="">All</option><option>Y</option><option>N</option>']
+      ].map(([l,id,opts])=>`<div><label class="lbl">${l}</label><select class="input df" id="df-${id}">${opts}</select></div>`).join('')}
+    <div><label class="lbl">Age from</label><input class="input df" id="df-ageMin" type="number" min="3" max="25"></div>
+    <div><label class="lbl">Age to</label><input class="input df" id="df-ageMax" type="number" min="3" max="25"></div>
+    <div><label class="lbl">Attendance % from</label><input class="input df" id="df-attMin" type="number" min="0" max="100"></div>
+    <div><label class="lbl">Attendance % to</label><input class="input df" id="df-attMax" type="number" min="0" max="100"></div>
+    <div style="align-self:end"><button class="btn-ghost" id="dfReset">Reset filters</button></div>
+  </div><div class="small" id="dfStatus" style="margin-top:8px"></div></div>
+  <div id="dashBody">Loading…</div>`;
+  const sessSel = $('#df-session');
+  const me = await api('/api/me');
+  sessSel.innerHTML = '<option value="">Current ('+me.currentSession+')</option>' + me.sessions.map(s=>`<option value="${s}">${s}</option>`).join('');
+  async function load(){
+    const q = new URLSearchParams();
+    $$('.df').forEach(i=>{ if(i.value) q.set(i.id.replace('df-',''), i.value); });
+    const d = await api('/api/dashboard?' + q.toString());
+    $('#dfStatus').textContent = `Showing ${d.total} of ${d.totalAll} students`;
+    const stat = (l,v)=>`<div class="card stat-card"><div class="stat-label">${l}</div><div class="stat-value">${v}</div></div>`;
+    const bars = (obj, max)=>Object.entries(obj).sort((a,b)=>a[0]-b[0]||a[0].localeCompare(b[0])).map(([k,v])=>`<div class="bar-row"><span class="bl">${esc(k)}</span><div class="bar-track"><div class="bar-fill" style="width:${max?Math.round(v/max*100):0}%"></div></div><b>${v}</b></div>`).join('');
+    const maxClass = Math.max(1, ...Object.values(d.byClass));
+    const cats = ['GEN','ST','SC','OBC','SBC'];
+    const repHead = `<tr><th>Class</th>${cats.map(c=>`<th colspan="3">${c}<br><span style="text-transform:none">B / G / T</span></th>`).join('')}<th colspan="3">Total Enrollment<br>B / G / T</th><th colspan="3">Minority<br>B / G / T</th></tr>`;
+    const repRow = r=>`<tr><td><b>${r.classNum}</b></td>${cats.map(c=>`<td>${r.cats[c].b}</td><td>${r.cats[c].g}</td><td><b>${r.cats[c].t}</b></td>`).join('')}<td>${r.total.b}</td><td>${r.total.g}</td><td><b>${r.total.t}</b></td><td>${r.minority.b}</td><td>${r.minority.g}</td><td>${r.minority.t}</td></tr>`;
+    const grpRow = r=>`<tr><td><b>${r.label}</b></td>${cats.map(c=>`<td>${r.cats[c].b}</td><td>${r.cats[c].g}</td><td><b>${r.cats[c].t}</b></td>`).join('')}<td>${r.total.b}</td><td>${r.total.g}</td><td><b>${r.total.t}</b></td></tr>`;
+    $('#dashBody').innerHTML = `
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+      ${stat('Students · विद्यार्थी', d.total)}${stat('Boys / Girls', d.boys + ' / ' + d.girls)}${stat('Staff · शिक्षक', d.staff)}${stat('Avg attendance', d.avgAtt + '%')}${stat('Below 75%', d.below75)}${stat('Below 50%', d.below50)}
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:16px">
+      <div class="card"><h3 class="font-display">Class-wise strength</h3>${bars(d.byClass, maxClass)}</div>
+      <div class="card"><h3 class="font-display">Category</h3>${bars(d.byCat, Math.max(1,...Object.values(d.byCat)))}
+        <p class="small">BPL: ${d.dataQuality.bpl} · CWSN: ${d.dataQuality.cwsn} · PEN missing: ${d.dataQuality.missingPen}</p></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h3 class="font-display">At-risk students (attendance &lt; 75%)</h3>
+      <div class="scrollbox" style="max-height:320px"><table class="tbl"><tr><th>SRNO</th><th>Name</th><th>Class</th><th>Attendance %</th></tr>
+      ${d.atRisk.map(x=>`<tr><td>${x.srno}</td><td>${esc(x.name)}</td><td>${x.classNum}</td><td><span class="pill ${x.pct<50?'pill-danger':'pill-warn'}">${x.pct}%</span></td></tr>`).join('') || '<tr><td colspan="4">None</td></tr>'}</table></div></div>
+    <div class="card" style="margin-top:16px"><h3 class="font-display">Shala Darpan Reports · शाला दर्पण रिपोर्ट</h3>
+      <h4>Report 1 — Class Wise Student Report</h4>
+      <div class="scrollbox"><table class="tbl" style="min-width:900px">${repHead}${d.reports.classRows.map(repRow).join('')}${repRow(d.reports.totalRow)}</table></div>
+      <h4 style="margin-top:18px">Report 2 — Class Groupwise Enrollment</h4>
+      <div class="scrollbox"><table class="tbl" style="min-width:900px"><tr><th>Group</th>${cats.map(c=>`<th colspan="3">${c}<br>B / G / T</th>`).join('')}<th colspan="3">Total<br>B / G / T</th></tr>${d.reports.groupRows.map(grpRow).join('')}</table></div>
+      <div style="margin-top:12px" class="noprint"><button class="btn-ghost" onclick="window.print()">Print both reports</button></div>
+    </div>`;
+  }
+  $$('.df').forEach(i=>i.addEventListener('change', load));
+  $('#dfReset').onclick = ()=>{ $$('.df').forEach(i=>i.value=''); load(); };
+  load();
+}
+
+// ---------------- Students ----------------
+async function pageStudents(){
+  const el = $('#page');
+  el.innerHTML = secTitle('Students','विद्यार्थी') + `
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    ${ME.role==='admin'?'<button class="btn-primary" id="addStudentBtn">+ Add Student</button>':''}
+    <a class="btn-ghost" href="/api/export/students.csv" style="text-decoration:none">Export CSV</a>
+  </div>
+  <div class="card" style="margin-bottom:14px"><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
+    <div style="grid-column:span 2"><label class="lbl">Search name / SRNO / father / mobile / PEN / NIC</label><input class="input sf" id="sf-search"></div>
+    <div><label class="lbl">Class</label><select class="input sf" id="sf-classNum"><option value="">All</option>${Array.from({length:12},(_,i)=>`<option>${i+1}</option>`).join('')}</select></div>
+    <div><label class="lbl">Gender</label><select class="input sf" id="sf-gender"><option value="">All</option><option value="M">Boys</option><option value="F">Girls</option></select></div>
+    <div><label class="lbl">Category</label><select class="input sf" id="sf-category"><option value="">All</option><option>GEN</option><option>ST</option><option>SC</option><option>OBC</option><option>SBC</option></select></div>
+    <div><label class="lbl">Session (enrolled in)</label><select class="input sf" id="sf-session"><option value="">Current</option></select></div>
+    <div><label class="lbl">PEN status</label><select class="input sf" id="sf-penStatus"><option value="">All</option><option value="with">PEN hai</option><option value="missing">PEN missing</option></select></div>
+    <div><label class="lbl">BPL</label><select class="input sf" id="sf-bpl"><option value="">All</option><option>Y</option><option>N</option></select></div>
+    <div><label class="lbl">CWSN</label><select class="input sf" id="sf-cwsn"><option value="">All</option><option>Y</option><option>N</option></select></div>
+  </div><div class="small" id="sfStatus" style="margin-top:8px"></div></div>
+  <div id="stuBody"></div><div id="stuDetail"></div>`;
+  const me = await api('/api/me');
+  $('#sf-session').innerHTML = '<option value="">Current ('+me.currentSession+')</option>' + me.sessions.map(s=>`<option value="${s}">${s}</option>`).join('');
+  async function load(){
+    const q = new URLSearchParams();
+    $$('.sf').forEach(i=>{ if(i.value) q.set(i.id.replace('sf-',''), i.value); });
+    const d = await api('/api/students?' + q.toString());
+    $('#sfStatus').textContent = d.total + ' students';
+    $('#stuBody').innerHTML = `<div class="scrollbox"><table class="tbl" style="min-width:860px"><tr><th>SRNO</th><th>Name</th><th>Class</th><th>Roll</th><th>Gender</th><th>Category</th><th>Father</th><th>Mobile</th><th>PEN</th><th>Att %</th><th></th></tr>
+      ${d.students.map(s=>`<tr><td>${s.srno}</td><td><b>${esc(s.name)}</b></td><td>${s.classNum}-${esc(s.section)}</td><td>${esc(s.roll)}</td><td>${s.gender==='M'?'Boy':'Girl'}</td><td>${esc(s.category)}</td><td>${esc(s.father)}</td><td>${esc(s.mobile)}</td><td>${esc(s.pen||'—')}</td><td>${s.workingDays?Math.round(s.presentDays/s.workingDays*1000)/10:0}</td><td><button class="btn-ghost" data-view="${s.srno}">View</button></td></tr>`).join('')}</table></div>`;
+    $$('[data-view]').forEach(b=>b.onclick=()=>viewStudent(Number(b.dataset.view)));
+  }
+  $$('.sf').forEach(i=>i.addEventListener('change', load));
+  $('#sf-search').addEventListener('input', ()=>{ clearTimeout(window._st); window._st=setTimeout(load, 350); });
+  if ($('#addStudentBtn')) $('#addStudentBtn').onclick = async ()=>{
+    const srno = prompt('Naye student ka SRNO?'); if(!srno) return;
+    const name = prompt('Student ka naam?'); if(!name) return;
+    const classNum = prompt('Class (1-12)?', '1');
+    try { await api('/api/students', { method:'POST', body: JSON.stringify({ srno, name, classNum }) }); load(); } catch(e){ alert(e.message); }
+  };
+  load();
+}
+async function viewStudent(srno){
+  const d = await api('/api/student/' + srno);
+  const s = d.student;
+  const rows = [['SRNO',s.srno],['Name',s.name],['Class',s.classNum+'-'+s.section],['Roll',s.roll],['Gender',s.gender],['DOB',s.dob],['DOA',s.doa],['Father',s.father],['Mother',s.mother],['Category',s.category],['Religion',s.religion],['Mobile',s.mobile],['Address',s.address],['PEN',s.pen||'—'],['NIC Id',s.nicId||'—'],['Aadhaar Auth',s.aadhaarAuth||'—'],['BPL',s.bpl],['CWSN',s.cwsn],['Attendance', (s.workingDays?Math.round(s.presentDays/s.workingDays*1000)/10:0)+'% ('+s.presentDays+'/'+s.workingDays+')'],['Status',s.status]];
+  $('#stuDetail').innerHTML = `<div class="card" style="margin-top:14px"><h3 class="font-display">${esc(s.name)} · Class ${s.classNum}-${esc(s.section)}</h3>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">${rows.map(([k,v])=>`<div><span class="small">${k}</span><br><b>${esc(v)}</b></div>`).join('')}</div>
+    <p class="small" style="margin-top:10px">Enrolments: ${d.enrolments.map(e=>e.session+' (Class '+e.classNum+')').join(' · ') || '—'}</p>
+    ${s.remark?`<div class="msg msg-err" style="border:2px solid var(--danger)"><b>Teacher's Remark · शिक्षक की टिप्पणी:</b> ${esc(s.remark)}</div>`:''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <button class="btn-ghost" id="remarkBtn">Teacher's Remark</button>
+      ${ME.role==='admin'||ME.role==='teacher'?`<button class="btn-danger" id="removeBtn">Remove (TC/NSO…)</button>`:''}
+    </div></div>`;
+  $('#remarkBtn').onclick = async ()=>{ const r = prompt("Teacher's remark (parent ko laal banner me dikhega):", s.remark||''); if(r===null) return; await api('/api/student/'+srno+'/remark', {method:'POST', body: JSON.stringify({remark:r})}); viewStudent(srno); };
+  const rb = $('#removeBtn'); if (rb) rb.onclick = async ()=>{
+    const reason = prompt('Reason: TC Issued / NSO (Name Struck Off) / Passed Out / Duplicate / Wrong Entry', 'TC Issued'); if(!reason) return;
+    const date = prompt('Date (YYYY-MM-DD)', new Date().toISOString().slice(0,10)); if(!date) return;
+    const tcNumber = reason==='TC Issued' ? (prompt('TC Book No. (khaali chhod sakte hain)','')||'') : '';
+    if(!confirm(s.name+' ko Removed register me bhejein? Parent login band ho sakta hai.')) return;
+    await api('/api/student/'+srno+'/remove', {method:'POST', body: JSON.stringify({reason, date, tcNumber})});
+    $('#stuDetail').innerHTML=''; pageStudents();
+  };
+}
+
+// ---------------- Removed ----------------
+async function pageRemoved(){
+  const el = $('#page');
+  const d = await api('/api/removed');
+  let tab = 'tc';
+  el.innerHTML = secTitle('Removed Students (TC/NSO)','हटाए गए विद्यार्थी') + `
+    <div style="display:flex;gap:6px;margin-bottom:14px">
+      <button class="tab-btn" data-rt="tc">TC — Transfer Certificate (${d.tc})</button>
+      <button class="tab-btn" data-rt="nso">NSO — Name Struck Off (${d.nso})</button>
+      <button class="tab-btn" data-rt="other">Other (${d.students.filter(x=>x.removedReason!=='TC Issued'&&!x.removedReason.startsWith('NSO')).length})</button>
+    </div><div id="remBody"></div>`;
+  function render(){
+    $$('[data-rt]').forEach(b=>b.classList.toggle('active', b.dataset.rt===tab));
+    const list = d.students.filter(x=> tab==='tc' ? x.removedReason==='TC Issued' : tab==='nso' ? x.removedReason.startsWith('NSO') : (x.removedReason!=='TC Issued'&&!x.removedReason.startsWith('NSO')));
+    $('#remBody').innerHTML = `<div class="scrollbox"><table class="tbl" style="min-width:760px"><tr><th>SRNO</th><th>Name</th><th>Last Class</th><th>Reason</th><th>Date</th><th>TC No.</th><th>Note</th>${ME.role==='admin'?'<th></th>':''}</tr>
+      ${list.map(s=>`<tr><td>${s.srno}</td><td><b>${esc(s.name)}</b></td><td>${s.classNum||''}</td><td>${esc(s.removedReason)}</td><td>${esc(s.removedDate)}</td><td>${esc(s.tcNumber||'')}</td><td>${esc(s.note||'')}</td>${ME.role==='admin'?`<td><button class="btn-ghost" data-restore="${s.srno}">Restore</button></td>`:''}</tr>`).join('') || '<tr><td colspan="8">Is section me koi record nahi.</td></tr>'}</table></div>`;
+    $$('[data-restore]').forEach(b=>b.onclick=async()=>{ if(!confirm('SRNO '+b.dataset.restore+' ko wapas Active karein?')) return; try{ await api('/api/student/'+b.dataset.restore+'/restore',{method:'POST',body:'{}'}); pageRemoved(); }catch(e){ alert(e.message); } });
+  }
+  $$('[data-rt]').forEach(b=>b.onclick=()=>{ tab=b.dataset.rt; render(); });
+  render();
+}
+
+// ---------------- Shared SD sheet panel ----------------
+function sdPanelHtml(kind){
+  return `<div class="card" style="margin-top:14px"><h3 class="font-display">Shala Darpan Result Sheet · शाला दर्पण रिज़ल्ट शीट</h3>
+  <p class="small">Portal ki marks-entry sheet (.csv / .xlsx) upload karein ya CSV paste karein — Layout A (chhoti classes) aur Layout B (Class 11–12) dono apne aap pehchane jate hain. Khaali cell = purana mark waisa hi rahega. Scanned/image PDF ke marks yahan auto-read nahi hote (Muse version me OCR hai) — PDF sirf document ke roop me rakhein, marks ke liye sheet ya grid use karein.</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
+    <input type="file" id="sdFile-${kind}" accept=".csv,.xlsx" class="input" style="max-width:320px">
+    <button class="btn-ghost" id="sdReadFile-${kind}">Read file</button>
+    <a class="btn-ghost" id="sdTemplate-${kind}" href="#" style="text-decoration:none">Download blank sheet</a>
+  </div>
+  <label class="lbl">Paste rows (CSV)</label>
+  <textarea class="input" id="sdPaste-${kind}" rows="4" placeholder="SrNo,SRNO,Student Name,..."></textarea>
+  <div style="margin-top:8px"><button class="btn-ghost" id="sdReadPaste-${kind}">Read rows</button></div>
+  <div id="sdPreview-${kind}"></div></div>`;
+}
+async function sdRead(kind, examId, boardExamId){
+  const fileIn = document.getElementById('sdFile-'+kind);
+  const paste = document.getElementById('sdPaste-'+kind).value.trim();
+  let payload = { examId, boardExamId };
+  if (fileIn.files && fileIn.files[0]) {
+    const f = fileIn.files[0];
+    if (/\.xlsx$/i.test(f.name)) {
+      const buf = await f.arrayBuffer();
+      let bin = ''; const bytes = new Uint8Array(buf);
+      for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+      payload.xlsxBase64 = btoa(bin);
+    } else { payload.csvText = await f.text(); }
+  } else if (paste) payload.csvText = paste;
+  else { alert('Pehle file chunein ya CSV paste karein.'); return; }
+  const d = await api('/api/sd-parse', { method:'POST', body: JSON.stringify(payload) });
+  renderSdPreview(kind, d, examId, boardExamId);
+}
+function renderSdPreview(kind, d, examId, boardExamId){
+  const box = document.getElementById('sdPreview-'+kind);
+  const subs = [...new Set(d.rows.flatMap(r=>Object.keys(r.marks)))];
+  box.innerHTML = `<p class="small" style="margin-top:10px">Layout ${d.layout} · ${d.rows.length} rows · ${d.rows.filter(r=>r.matched).length} SRNO match</p>
+  <div class="scrollbox"><table class="tbl" style="min-width:700px"><tr><th>SRNO</th><th>Student</th><th>Match</th>${subs.map(s=>`<th>${esc(s)}</th>`).join('')}</tr>
+  ${d.rows.map((r,i)=>`<tr><td>${r.srno}</td><td>${esc(r.studentName||r.name)}</td><td>${r.matched?'<span class="pill pill-ok">Match</span>':'<span class="pill pill-danger">No match</span>'}</td>${subs.map(s=>`<td><input class="input sd-cell" data-i="${i}" data-sub="${esc(s)}" value="${r.marks[s]!==undefined?r.marks[s]:''}" style="width:70px"></td>`).join('')}</tr>`).join('')}</table></div>
+  ${d.rows.some(r=>r.unknownSubjects && r.unknownSubjects.length)?'<p class="small">Kuch subjects is exam me nahi hain — wo Apply nahi honge (pehle exam me subject jodein).</p>':''}
+  <button class="btn-primary" id="sdApply-${kind}" style="margin-top:10px">Apply bulk update</button> <span id="sdMsg-${kind}"></span>`;
+  document.getElementById('sdApply-'+kind).onclick = async ()=>{
+    const rows = d.rows.map((r,i)=>{ const marks = {}; $$(`.sd-cell[data-i="${i}"]`).forEach(inp=>{ if(inp.value!=='') marks[inp.dataset.sub] = Number(inp.value); }); return { srno: r.srno, matched: r.matched, marks }; });
+    try { const res = await api('/api/sd-apply', { method:'POST', body: JSON.stringify({ examId, boardExamId, rows }) });
+      document.getElementById('sdMsg-'+kind).innerHTML = `<span class="pill pill-ok">${res.applied} marks cells saved</span>`;
+    } catch(e){ alert(e.message); }
+  };
+}
+
+// ---------------- Results ----------------
+async function pageResults(){
+  const el = $('#page');
+  const d = await api('/api/exams');
+  el.innerHTML = secTitle('Exam Results','परीक्षा परिणाम') + `
+  <div class="card" style="margin-bottom:14px"><h3 class="font-display">Create Exam · नया Exam</h3>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+      <div><label class="lbl">Exam name</label><input class="input" id="exName"></div>
+      <div><label class="lbl">Class</label><select class="input" id="exClass">${Array.from({length:12},(_,i)=>`<option>${i+1}</option>`).join('')}</select></div>
+      <div><label class="lbl">Section</label><input class="input" id="exSection" value="A"></div>
+      <div style="align-self:end"><button class="btn-primary" id="exCreate">Create exam</button></div>
+    </div>
+    <p class="small">Class 9–10 me Sanskrit aur Class 11–12 me English (Compulsory), Hindi (Compulsory), Physics, Chemistry, Biology default subjects pehle se bhare aate hain — Create ke baad subjects badal sakte hain.</p>
+    <div id="exMsg"></div></div>
+  <div class="card"><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+    <div><label class="lbl">Session</label><select class="input" id="rsSession"><option>2026-27</option></select></div>
+    <div><label class="lbl">Class</label><select class="input" id="rsClass"><option value="">All</option>${Array.from({length:12},(_,i)=>`<option>${i+1}</option>`).join('')}</select></div>
+    <div><label class="lbl">Exam</label><select class="input" id="rsExam"></select></div>
+  </div></div>
+  <div id="examPanel"></div>`;
+  const exams = d.exams;
+  function fillExamSel(){
+    const cls = $('#rsClass').value;
+    const list = exams.filter(e=>!cls || e.classNum===Number(cls));
+    $('#rsExam').innerHTML = list.map(e=>`<option value="${e.id}">${esc(e.name)} · Class ${e.classNum}-${esc(e.section)} · ${e.published?'Published':'Draft'}</option>`).join('');
+    if (list.length) renderExam(list[list.length-1].id); else $('#examPanel').innerHTML = '<p class="small" style="margin-top:12px">Is class ke liye koi exam nahi hai.</p>';
+  }
+  async function renderExam(id){
+    const g = await api('/api/exams/' + id + '/grid');
+    const e = g.exam;
+    $('#examPanel').innerHTML = `<div class="card" style="margin-top:14px">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <h3 class="font-display" style="flex:1;margin:0">${esc(e.name)} · Class ${e.classNum}-${esc(e.section)}</h3>
+        <span class="pill ${e.published?'pill-ok':'pill-warn'}">${e.published?'Published · parents can see':'Not published'}</span>
+        ${ME.role==='admin'?`<button class="btn-ghost" id="pubBtn">${e.published?'Unpublish':'Publish'}</button>`:''}
+      </div>
+      <p class="small">Session ${esc(e.session)} · ${e.subjects.map(s=>esc(s.name)+' ('+s.max+')').join(', ')} · ${g.students.filter(x=>x.result).length} students ke marks</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-primary" id="gridBtn">Enter marks</button>
+        ${ME.role==='admin'?'<button class="btn-danger" id="delResultsBtn">Delete all results</button><button class="btn-danger" id="delExamBtn">Delete exam</button>':''}
+      </div>
+      <div id="gridBox"></div>
+      <div id="examMsg"></div>
+    </div>` + sdPanelHtml('exam');
+    document.getElementById('sdTemplate-exam').href = '/api/exams/' + id + '/template';
+    document.getElementById('sdReadFile-exam').onclick = ()=>sdRead('exam', id, null).catch(e=>alert(e.message));
+    document.getElementById('sdReadPaste-exam').onclick = ()=>sdRead('exam', id, null).catch(e=>alert(e.message));
+    if ($('#pubBtn')) $('#pubBtn').onclick = async ()=>{ await api('/api/exams/'+id+'/publish', {method:'POST', body: JSON.stringify({published: !e.published})}); pageResults(); };
+    if ($('#delResultsBtn')) $('#delResultsBtn').onclick = async ()=>{ if(!confirm('Saare marks delete honge AUR exam Unpublish ho jayega. Pakka?')) return; const r = await api('/api/exams/'+id+'/delete-results', {method:'POST', body:'{}'}); alert(r.deleted + ' marks delete hue, exam ab Not published hai.'); pageResults(); };
+    if ($('#delExamBtn')) $('#delExamBtn').onclick = async ()=>{ const name = prompt('Poora exam hamesha ke liye delete hoga (marks + report-card PDFs ke saath). Confirm karne ke liye exam ka exact naam type karein:'); if(!name) return; try{ await api('/api/exams/'+id, {method:'DELETE', body: JSON.stringify({confirmName: name})}); pageResults(); }catch(err){ alert(err.message); } };
+    $('#gridBtn').onclick = ()=>{
+      const box = $('#gridBox');
+      if (box.innerHTML) { box.innerHTML=''; return; }
+      box.innerHTML = `<div class="scrollbox" style="margin-top:12px"><table class="tbl" style="min-width:760px"><tr><th>SRNO</th><th>Name</th>${e.subjects.map(s=>`<th>${esc(s.name)}<br><span style="text-transform:none">/${s.max}</span></th>`).join('')}<th>Total</th><th>%</th><th>Rank</th>${ME.role==='admin'?'<th></th>':''}</tr>
+      ${g.students.map(st=>`<tr><td>${st.srno}</td><td>${esc(st.name)}</td>${e.subjects.map(s=>`<td><input class="input mk" data-srno="${st.srno}" data-sub="${esc(s.name)}" value="${st.result && st.result.marks[s.name]!==null && st.result.marks[s.name]!==undefined ? st.result.marks[s.name] : ''}" style="width:64px"></td>`).join('')}<td>${st.result?st.result.total:'—'}</td><td>${st.result?st.result.pct+'%':'—'}</td><td>${st.result?st.result.grade:''}</td>${ME.role==='admin'?`<td><button class="btn-ghost" data-delstu="${st.srno}">Delete result</button></td>`:''}</tr>`).join('')}</table></div>
+      <button class="btn-primary" id="saveMarks" style="margin-top:10px">Save marks</button>`;
+      $('#saveMarks').onclick = async ()=>{
+        const bySrno = {};
+        $$('.mk').forEach(inp=>{ const k = inp.dataset.srno; bySrno[k] = bySrno[k] || { srno: Number(k), marks: {} }; bySrno[k].marks[inp.dataset.sub] = inp.value === '' ? null : Number(inp.value); });
+        try { await api('/api/exams/'+id+'/marks', { method:'POST', body: JSON.stringify({ rows: Object.values(bySrno) }) }); showMsg('examMsg','Marks save ho gaye.','ok'); renderExam(id); }
+        catch(err){ showMsg('examMsg', err.message, 'err'); }
+      };
+      $$('[data-delstu]').forEach(b=>b.onclick=async()=>{ if(!confirm('Is student ka result is exam se delete karein? Parent ko "Result not available" dikhega.')) return; await api('/api/student-result-delete', {method:'POST', body: JSON.stringify({ examId: id, srno: Number(b.dataset.delstu) })}); renderExam(id); });
+    };
+  }
+  $('#rsClass').onchange = fillExamSel;
+  $('#rsExam').onchange = ()=>renderExam(Number($('#rsExam').value));
+  $('#exCreate').onclick = async ()=>{
+    try { await api('/api/exams', { method:'POST', body: JSON.stringify({ name: $('#exName').value, classNum: Number($('#exClass').value), section: $('#exSection').value }) }); pageResults(); }
+    catch(e){ showMsg('exMsg', e.message, 'err'); }
+  };
+  fillExamSel();
+}
+
+// ---------------- Board Results ----------------
+async function pageBoard(){
+  const el = $('#page');
+  const d = await api('/api/board-exams');
+  el.innerHTML = secTitle('Board Results','बोर्ड परिणाम') + `
+  ${ME.role==='admin'?`<div class="card" style="margin-bottom:14px"><h3 class="font-display">Create Board Exam</h3>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+      <div><label class="lbl">Board Class</label><select class="input" id="beClass"><option>5</option><option>8</option><option>10</option><option>12</option></select></div>
+      <button class="btn-primary" id="beCreate">Create board exam</button><span id="beMsg"></span></div></div>`:''}
+  <div class="card"><label class="lbl">Board Exam</label>
+    <select class="input" id="beSel">${d.boardExams.map(e=>`<option value="${e.id}">Class ${e.classNum} Board ${esc(e.session)} · ${e.published?'Published':'Draft'} · Rolls ${e.rollCount} · Results ${e.resultCount}</option>`).join('')}</select></div>
+  <div id="boardPanel"></div>`;
+  async function renderBoard(id){
+    if (!id) { $('#boardPanel').innerHTML = '<p class="small" style="margin-top:12px">Koi board exam nahi hai.</p>'; return; }
+    const g = await api('/api/board-exams/' + id + '/grid');
+    const e = g.boardExam;
+    $('#boardPanel').innerHTML = `<div class="card" style="margin-top:14px">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <h3 class="font-display" style="flex:1;margin:0">Class ${e.classNum} Board · ${esc(e.session)}</h3>
+        <span class="pill ${e.published?'pill-ok':'pill-warn'}">${e.published?'Published · parents can see':'Not published'}</span>
+        ${ME.role==='admin'?`<button class="btn-ghost" id="bPubBtn">${e.published?'Unpublish':'Publish'}</button>`:''}
+      </div>
+      <h4 class="font-display">Stage 1 — Board Roll Numbers</h4>
+      <div class="scrollbox" style="max-height:300px"><table class="tbl"><tr><th>SRNO</th><th>Name</th><th>Board Roll No.</th></tr>
+      ${g.students.map(st=>`<tr><td>${st.srno}</td><td>${esc(st.name)}</td><td><input class="input roll-in" data-srno="${st.srno}" value="${esc(st.result.boardRollNo||'')}" style="width:150px"></td></tr>`).join('')}</table></div>
+      <button class="btn-primary" id="saveRolls" style="margin-top:10px">Save roll numbers</button>
+      <h4 class="font-display" style="margin-top:20px">Stage 2 — Board Marks</h4>
+      <div class="scrollbox"><table class="tbl" style="min-width:760px"><tr><th>SRNO</th><th>Name</th><th>Roll</th>${e.subjects.map(s=>`<th>${esc(s.name)}<br><span style="text-transform:none">/${s.max}</span></th>`).join('')}<th>Total</th><th>%</th><th>Division</th></tr>
+      ${g.students.map(st=>`<tr><td>${st.srno}</td><td>${esc(st.name)}</td><td>${esc(st.result.boardRollNo||'')}</td>${e.subjects.map(s=>`<td><input class="input bmk" data-srno="${st.srno}" data-sub="${esc(s.name)}" value="${st.result.marks && st.result.marks[s.name]!==null && st.result.marks[s.name]!==undefined ? st.result.marks[s.name] : ''}" style="width:64px"></td>`).join('')}<td>${st.result.hasResult?st.result.total:'—'}</td><td>${st.result.hasResult?st.result.pct+'%':''}</td><td>${st.result.hasResult?st.result.division+' · '+st.result.status:''}</td></tr>`).join('')}</table></div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn-primary" id="saveBoardMarks">Save board marks</button>
+      ${ME.role==='admin'?'<button class="btn-danger" id="delBoardResults">Delete all results</button><button class="btn-danger" id="delBoardExam">Delete board exam</button>':''}</div>
+      <div id="boardMsg"></div>
+    </div>` + sdPanelHtml('board');
+    document.getElementById('sdTemplate-board').href = '/api/board-exams/' + id + '/template';
+    document.getElementById('sdReadFile-board').onclick = ()=>sdRead('board', null, id).catch(e=>alert(e.message));
+    document.getElementById('sdReadPaste-board').onclick = ()=>sdRead('board', null, id).catch(e=>alert(e.message));
+    if ($('#bPubBtn')) $('#bPubBtn').onclick = async ()=>{ await api('/api/board-exams/'+id+'/publish', {method:'POST', body: JSON.stringify({published: !e.published})}); pageBoard(); };
+    $('#saveRolls').onclick = async ()=>{ const rows = $$('.roll-in').map(i=>({ srno: Number(i.dataset.srno), boardRollNo: i.value })); try{ await api('/api/board-exams/'+id+'/rolls', {method:'POST', body: JSON.stringify({rows})}); showMsg('boardMsg','Roll numbers save ho gaye.','ok'); }catch(err){ showMsg('boardMsg', err.message, 'err'); } };
+    $('#saveBoardMarks').onclick = async ()=>{ const by = {}; $$('.bmk').forEach(inp=>{ const k = inp.dataset.srno; by[k] = by[k] || { srno: Number(k), marks: {} }; by[k].marks[inp.dataset.sub] = inp.value === '' ? null : Number(inp.value); }); try{ await api('/api/board-exams/'+id+'/marks', {method:'POST', body: JSON.stringify({ rows: Object.values(by) })}); showMsg('boardMsg','Board marks save ho gaye.','ok'); renderBoard(id); }catch(err){ showMsg('boardMsg', err.message, 'err'); } };
+    if ($('#delBoardResults')) $('#delBoardResults').onclick = async ()=>{ if(!confirm('Saare board marks delete honge AUR board exam Unpublish ho jayega. Pakka?')) return; await api('/api/board-exams/'+id+'/delete-results', {method:'POST', body:'{}'}); pageBoard(); };
+    if ($('#delBoardExam')) $('#delBoardExam').onclick = async ()=>{ const label = 'Class ' + e.classNum + ' Board ' + e.session; const name = prompt('Poora board exam delete hoga (roll numbers + marks ke saath). Confirm ke liye exact type karein: ' + label); if(!name) return; try{ await api('/api/board-exams/'+id, {method:'DELETE', body: JSON.stringify({confirmName: name})}); pageBoard(); }catch(err){ alert(err.message); } };
+  }
+  if ($('#beCreate')) $('#beCreate').onclick = async ()=>{ try{ await api('/api/board-exams', {method:'POST', body: JSON.stringify({ classNum: Number($('#beClass').value) })}); pageBoard(); }catch(e){ showMsg('beMsg', e.message, 'err'); } };
+  $('#beSel').onchange = ()=>renderBoard(Number($('#beSel').value));
+  renderBoard(d.boardExams.length ? d.boardExams[d.boardExams.length-1].id : null);
+}
+
+// ---------------- Update PEN ----------------
+async function pagePen(){
+  const el = $('#page');
+  el.innerHTML = secTitle('Update PEN','PEN अपडेट') + `
+  <div class="card"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+    <div><label class="lbl">Class</label><select class="input" id="penClass"><option value="0">All Classes · सभी कक्षाएँ</option>${Array.from({length:12},(_,i)=>`<option value="${i+1}">Class ${i+1}</option>`).join('')}</select></div>
+    <a class="btn-ghost" id="penExport" href="/api/export/pen.csv?classNum=0" style="text-decoration:none">Export CSV</a>
+    <span class="small" id="penSummary"></span></div>
+  <div id="penBody" style="margin-top:14px"></div>
+  <div id="penMsg"></div></div>`;
+  async function load(){
+    const cls = $('#penClass').value;
+    $('#penExport').href = '/api/export/pen.csv?classNum=' + cls;
+    const d = await api('/api/pen-sheet?classNum=' + cls);
+    $('#penSummary').textContent = d.total + ' students · ' + d.withPen + ' ke paas PEN hai' + (d.missing.length ? ' · Missing: ' + d.missing.map(m=>m.srno).join(', ') : '');
+    $('#penBody').innerHTML = `<div class="scrollbox"><table class="tbl" style="min-width:980px"><tr><th>SRNO</th><th>Name</th><th>Class</th><th>Gender</th><th>Father</th><th>Mother</th><th>DOB</th><th>NIC Id</th><th>Aadhaar Auth</th><th>PEN (11 digits)</th></tr>
+    ${d.students.map(s=>`<tr><td>${s.srno}</td><td>${esc(s.name)}</td><td>${s.classNum}-${esc(s.section)}</td><td>${s.gender}</td><td>${esc(s.father)}</td><td>${esc(s.mother)}</td><td>${esc(s.dob)}</td>
+      <td><input class="input pen-nic" data-srno="${s.srno}" value="${esc(s.nicId||'')}" style="width:110px"></td>
+      <td><input class="input pen-auth" data-srno="${s.srno}" value="${esc(s.aadhaarAuth||'')}" style="width:56px"></td>
+      <td><input class="input pen-val" data-srno="${s.srno}" value="${esc(s.pen||'')}" style="width:130px"></td></tr>`).join('')}</table></div>
+    <button class="btn-primary" id="penSave" style="margin-top:12px">Save All</button>`;
+    $('#penSave').onclick = async ()=>{
+      const rows = $$('.pen-val').map(inp=>{ const srno = inp.dataset.srno; return { srno: Number(srno), pen: inp.value, nicId: $(`.pen-nic[data-srno="${srno}"]`).value, aadhaarAuth: $(`.pen-auth[data-srno="${srno}"]`).value }; });
+      try { await api('/api/pen-save', { method:'POST', body: JSON.stringify({ rows }) }); showMsg('penMsg','PEN sheet save ho gayi.','ok'); load(); }
+      catch(e){ showMsg('penMsg', e.message, 'err'); }
+    };
+  }
+  $('#penClass').onchange = load;
+  load();
+}
+
+// ---------------- Teachers ----------------
+async function pageTeachers(){
+  const el = $('#page');
+  const d = await api('/api/teachers');
+  el.innerHTML = secTitle('Teachers','शिक्षक') + `
+  ${ME.role==='admin'?`<div style="margin-bottom:12px"><button class="btn-primary" id="tAdd">+ Add Teacher</button></div>`:''}
+  <div class="scrollbox"><table class="tbl" style="min-width:820px"><tr><th>#</th><th>Name</th><th>Employee ID</th><th>Post</th><th>Subject</th><th>Gender</th><th>Joining</th><th>Home page</th>${ME.role==='admin'?'<th></th>':''}</tr>
+  ${d.teachers.map((t,i)=>`<tr><td>${i+1}</td><td><b>${esc(t.name)}</b></td><td>${esc(t.employeeId)}</td><td>${esc(t.post)}</td><td>${esc(t.subject)}</td><td>${esc(t.gender)}</td><td>${esc(t.joining)}</td>
+    <td>${ME.role==='admin'?`<button class="btn-ghost" data-vis="${esc(t.employeeId)}">${t.showOnHome!==false?'Shown':'Hidden'}</button>`:(t.showOnHome!==false?'Shown':'Hidden')}</td>
+    ${ME.role==='admin'?`<td><button class="btn-ghost" data-tedit="${esc(t.employeeId)}">Edit</button> <button class="btn-danger" data-tdel="${esc(t.employeeId)}">Delete</button></td>`:''}</tr>`).join('')}</table></div>`;
+  $$('[data-vis]').forEach(b=>b.onclick=async()=>{ const t = d.teachers.find(x=>x.employeeId===b.dataset.vis); await api('/api/home-staff-visibility', {method:'POST', body: JSON.stringify({ employeeId: b.dataset.vis, show: !(t.showOnHome!==false) })}); pageTeachers(); });
+  $$('[data-tedit]').forEach(b=>b.onclick=async()=>{ const t = d.teachers.find(x=>x.employeeId===b.dataset.tedit); const name = prompt('Naam:', t.name); if(name===null) return; const post = prompt('Post:', t.post); if(post===null) return; const subject = prompt('Subject:', t.subject); if(subject===null) return; await api('/api/teachers', {method:'PUT', body: JSON.stringify({ employeeId: t.employeeId, name, post, subject })}); pageTeachers(); });
+  $$('[data-tdel]').forEach(b=>b.onclick=async()=>{ if(!confirm('Is teacher ka record delete karein? (website login bhi band ho jayega)')) return; await api('/api/teachers', {method:'DELETE', body: JSON.stringify({ employeeId: b.dataset.tdel })}); pageTeachers(); });
+  if ($('#tAdd')) $('#tAdd').onclick = async ()=>{ const employeeId = prompt('Employee ID?'); if(!employeeId) return; const name = prompt('Naam?'); if(!name) return; const post = prompt('Post?','Teacher'); const subject = prompt('Subject?',''); await api('/api/teachers', {method:'POST', body: JSON.stringify({ employeeId, name, post, subject })}); pageTeachers(); };
+}
+
+// ---------------- Attendance ----------------
+async function pageAttendance(){
+  const el = $('#page');
+  el.innerHTML = secTitle('Attendance','उपस्थिति') + `
+  <div class="card"><h3 class="font-display">Daily Attendance · दैनिक उपस्थिति</h3>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+      <div><label class="lbl">Class</label><select class="input" id="attClass">${Array.from({length:12},(_,i)=>`<option>${i+1}</option>`).join('')}</select></div>
+      <div><label class="lbl">Date</label><input class="input" id="attDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+      <button class="btn-ghost" id="attLoad">Load class list</button></div>
+    <div id="attBody" style="margin-top:12px"></div></div>
+  <div class="card" style="margin-top:16px"><h3 class="font-display">Monthly Attendance · मासिक उपस्थिति</h3>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+      <div><label class="lbl">Class</label><select class="input" id="mAttClass">${Array.from({length:12},(_,i)=>`<option>${i+1}</option>`).join('')}</select></div>
+      <div><label class="lbl">Month (YYYY-MM)</label><input class="input" id="mAttMonth" value="${new Date().toISOString().slice(0,7)}"></div>
+      <button class="btn-ghost" id="mAttLoad">Load grid</button></div>
+    <div id="mAttBody" style="margin-top:12px"></div></div>`;
+  $('#attLoad').onclick = async ()=>{
+    const d = await api('/api/attendance/daily?classNum=' + $('#attClass').value + '&date=' + $('#attDate').value);
+    $('#attBody').innerHTML = `<table class="tbl"><tr><th>#</th><th>SRNO</th><th>Name</th><th>Present</th></tr>
+      ${d.students.map((s,i)=>`<tr><td>${i+1}</td><td>${s.srno}</td><td>${esc(s.name)}</td><td><input type="checkbox" class="att-chk" data-srno="${s.srno}" ${s.present?'checked':''}></td></tr>`).join('')}</table>
+      <button class="btn-primary" id="attSave" style="margin-top:10px">Save attendance</button> <span id="attMsg"></span>`;
+    $('#attSave').onclick = async ()=>{ const marks = {}; $$('.att-chk').forEach(c=>{ marks[c.dataset.srno] = c.checked ? 'P' : 'A'; }); await api('/api/attendance/daily', {method:'POST', body: JSON.stringify({ classNum: Number($('#attClass').value), date: $('#attDate').value, marks })}); showMsg('attMsg','Attendance save ho gayi.','ok'); };
+  };
+  $('#mAttLoad').onclick = async ()=>{
+    const d = await api('/api/attendance/monthly?classNum=' + $('#mAttClass').value + '&month=' + $('#mAttMonth').value);
+    $('#mAttBody').innerHTML = `<div class="scrollbox"><table class="tbl"><tr><th>SRNO</th><th>Name</th><th>Working Days</th><th>Present Days</th></tr>
+      ${d.students.map(s=>`<tr><td>${s.srno}</td><td>${esc(s.name)}</td><td><input class="input mw" data-srno="${s.srno}" value="${s.workingDays}" style="width:90px"></td><td><input class="input mp" data-srno="${s.srno}" value="${s.presentDays}" style="width:90px"></td></tr>`).join('')}</table></div>
+      <button class="btn-primary" id="mAttSave" style="margin-top:10px">Save monthly attendance</button> <span id="mAttMsg"></span>`;
+    $('#mAttSave').onclick = async ()=>{ const rows = $$('.mw').map(inp=>{ const srno = inp.dataset.srno; return { srno: Number(srno), workingDays: inp.value, presentDays: $(`.mp[data-srno="${srno}"]`).value }; }); await api('/api/attendance/monthly', {method:'POST', body: JSON.stringify({ month: $('#mAttMonth').value, rows })}); showMsg('mAttMsg','Monthly attendance save ho gayi.','ok'); };
+  };
+}
+
+// ---------------- Upload + Import Centre ----------------
+function importCard(title, kind, hint){
+  return `<div class="card" style="margin-bottom:14px"><h3 class="font-display">${title}</h3><p class="small">${hint}</p>
+  <input type="file" accept=".csv" class="input imp-file" data-kind="${kind}" style="max-width:340px">
+  <button class="btn-primary imp-btn" data-kind="${kind}">Import</button> <span class="imp-msg" data-kind="${kind}"></span></div>`;
+}
+function bindImports(){
+  $$('.imp-btn').forEach(b=>b.onclick=async()=>{
+    const kind = b.dataset.kind;
+    const f = $(`.imp-file[data-kind="${kind}"]`).files[0];
+    if (!f) { alert('Pehle CSV file chunein.'); return; }
+    const text = await f.text();
+    try { const r = await api('/api/import', { method:'POST', body: JSON.stringify({ kind, csvText: text }) });
+      $(`.imp-msg[data-kind="${kind}"]`).innerHTML = `<span class="pill pill-ok">${r.applied} rows import hue</span>` + (r.errors && r.errors.length ? ' <span class="pill pill-warn">' + esc(r.errors.slice(0,3).join('; ')) + '</span>' : '');
+    } catch(e){ alert(e.message); }
+  });
+}
+async function pageUpload(){
+  $('#page').innerHTML = secTitle('Upload Centre','अपलोड केंद्र') +
+    importCard('Students CSV Import','students','Columns: SRNO, Student Name, Class — naye students judenge, duplicate SRNO par error aayega.') +
+    importCard('Monthly Attendance CSV Import','attendance','Columns: SRNO, Month (YYYY-MM), Working Days, Present Days') +
+    `<div class="card"><h3 class="font-display">Result update</h3><p class="small">Marks ke liye Results / Board Results tab me Shala Darpan Result Sheet panel hai — wahi se CSV/XLSX sheet upload hoti hai.</p></div>`;
+  bindImports();
+}
+async function pageImport(){
+  $('#page').innerHTML = secTitle('Import Centre','आयात केंद्र') +
+    importCard('PEN / NIC CSV Import','pen','Columns: SRNO, PEN, NIC Id — Update PEN page ka data file se bharein.') +
+    importCard('Monthly Attendance CSV Import','attendance','Columns: SRNO, Month (YYYY-MM), Working Days, Present Days') +
+    importCard('Students CSV Import','students','Columns: SRNO, Student Name, Class') +
+    `<div class="card"><h3 class="font-display">Note</h3><p class="small">Standalone version me Import Centre ka basic CSV import hai. Muse version wala Universal Import Centre (PDF import, OCR review queue, mapping templates) is package me nahi hai — guide me saaf likha hai.</p></div>
+    <div class="card"><h3 class="font-display">Audit Log</h3><div id="auditBox">Loading…</div></div>`;
+  bindImports();
+  const a = await api('/api/audit');
+  $('#auditBox').innerHTML = a.log.length ? a.log.map(x=>`<div class="small">${esc(x.at)} · ${esc(x.who)} · ${esc(x.what)}</div>`).join('') : 'Abhi koi entry nahi.';
+}
+
+// ---------------- Admit Cards ----------------
+async function pageAdmit(){
+  const el = $('#page');
+  const d = await api('/api/admit-cards');
+  el.innerHTML = secTitle('Admit Card','एडमिट कार्ड') + `
+  <div class="card" style="margin-bottom:14px"><h3 class="font-display">Upload Admit Card (PDF)</h3>
+    <p class="small">Admit cards Board classes (5, 8, 10, 12) ke liye hain. Student ka SRNO, exam label aur PDF file dein — wahi student ke parent ko dikhega. Usi student + label par dobara upload purani file ko replace kar dega.</p>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+      <div><label class="lbl">Student SRNO</label><input class="input" id="acSrno" type="number"></div>
+      <div><label class="lbl">Exam label</label><input class="input" id="acLabel" placeholder="Half Yearly Exam"></div>
+      <div><label class="lbl">PDF file</label><input class="input" id="acFile" type="file" accept=".pdf"></div>
+      <div style="align-self:end"><button class="btn-primary" id="acUpload">Upload</button></div>
+    </div><div id="acMsg"></div></div>
+  <div class="card"><h3 class="font-display">Uploaded admit cards</h3>
+    <table class="tbl"><tr><th>Student</th><th>Class</th><th>Status</th><th>Label</th><th>File</th><th>Date</th><th></th></tr>
+    ${d.cards.map(c=>`<tr><td><b>${esc(c.studentName)}</b> (${c.srno})</td><td>${c.classNum||''}</td><td>${esc(c.studentStatus||'')}</td><td>${esc(c.examLabel)}</td><td>${c.hasFile?`<a href="/api/admit-cards/${c.id}/file" target="_blank">${esc(c.fileName)}</a>`:esc(c.fileName)+' <span class="pill pill-warn">file standalone me nahi</span>'}</td><td>${esc(c.uploadedDate||'')}</td><td><button class="btn-danger" data-acdel="${c.id}">Delete</button></td></tr>`).join('') || '<tr><td colspan="7">Abhi koi admit card nahi.</td></tr>'}</table>
+    <p class="small" style="margin-top:8px">Merged PDF (saare students ek file me) ka auto-split Muse version me hai; standalone me ek-ek student ki card upload hoti hai.</p></div>`;
+  $('#acUpload').onclick = async ()=>{
+    const f = $('#acFile').files[0];
+    if (!f) { showMsg('acMsg','PDF file chunein.','err'); return; }
+    if (!/\.pdf$/i.test(f.name)) { showMsg('acMsg','Only PDF files can be uploaded as an admit card.','err'); return; }
+    const buf = await f.arrayBuffer(); let bin = ''; const bytes = new Uint8Array(buf);
+    for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+    try { const r = await api('/api/admit-cards', { method:'POST', body: JSON.stringify({ srno: Number($('#acSrno').value), examLabel: $('#acLabel').value, fileName: f.name, dataBase64: btoa(bin) }) });
+      showMsg('acMsg', r.replaced ? 'Purani card replace ho gayi.' : 'Admit card upload ho gayi.', 'ok'); pageAdmit();
+    } catch(e){ showMsg('acMsg', e.message, 'err'); }
+  };
+  $$('[data-acdel]').forEach(b=>b.onclick=async()=>{ if(!confirm('Ye admit card delete karein?')) return; await api('/api/admit-cards', {method:'DELETE', body: JSON.stringify({ id: Number(b.dataset.acdel) })}); pageAdmit(); });
+}
+
+// ---------------- Parent Logins + Accounts ----------------
+async function pageParents(){
+  const d = await api('/api/accounts');
+  $('#page').innerHTML = secTitle('Parent Logins','अभिभावक लॉगिन') + `
+  <div class="card" style="margin-bottom:14px"><h3 class="font-display">Naya Parent Account</h3>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+      <div><label class="lbl">Guardian name</label><input class="input" id="npName"></div>
+      <div><label class="lbl">Mobile</label><input class="input" id="npMobile"></div>
+      <div><label class="lbl">Pehla bachcha (SRNO)</label><input class="input" id="npSrno" type="number"></div>
+      <button class="btn-primary" id="npCreate">Create</button><span id="npMsg"></span></div>
+    <p class="small">Login ID = HODA + SRNO, temporary password = bachche ki DOB (DDMMYYYY).</p></div>
+  <div class="scrollbox"><table class="tbl" style="min-width:820px"><tr><th>Login ID</th><th>Guardian</th><th>Mobile</th><th>Parent of</th><th>Status</th><th></th></tr>
+  ${d.parents.map(par=>`<tr><td><b>${esc(par.loginId)}</b></td><td>${esc(par.guardianName)}</td><td>${esc(par.mobile)}</td>
+    <td>${par.children.map(c=>esc(c.name)+' ('+c.srno+', Class '+c.classNum+(c.status==='removed'?', Removed':'')+')').join('<br>') || '—'}</td>
+    <td>${par.active?'<span class="pill pill-ok">Active</span>':'<span class="pill pill-danger">Band</span>'}</td>
+    <td><button class="btn-ghost" data-link="${esc(par.loginId)}">Link child</button> <button class="btn-ghost" data-reset="${esc(par.loginId)}">Reset password</button></td></tr>`).join('')}</table></div>`;
+  $$('[data-link]').forEach(b=>b.onclick=async()=>{ const srno = prompt('Kaunsa student (SRNO) is parent se jodein?'); if(!srno) return; try{ await api('/api/accounts', {method:'POST', body: JSON.stringify({ action:'link', loginId: b.dataset.link, srno: Number(srno) })}); pageParents(); }catch(e){ alert(e.message); } });
+  $$('[data-reset]').forEach(b=>b.onclick=async()=>{ if(!confirm('Password wapas bachche ki DOB (DDMMYYYY) par reset karein?')) return; await api('/api/accounts', {method:'POST', body: JSON.stringify({ action:'reset-parent', loginId: b.dataset.reset })}); alert('Password reset ho gaya.'); });
+  $('#npCreate').onclick = async ()=>{ try{ const r = await api('/api/accounts', {method:'POST', body: JSON.stringify({ action:'create-parent', guardianName: $('#npName').value, mobile: $('#npMobile').value, srno: Number($('#npSrno').value) })}); showMsg('npMsg','Account ban gaya: '+r.loginId,'ok'); pageParents(); }catch(e){ showMsg('npMsg', e.message, 'err'); } };
+}
+async function pageAccounts(){
+  const d = await api('/api/accounts');
+  $('#page').innerHTML = secTitle('Accounts','खाते') + `
+  <div class="card"><h3 class="font-display">Staff Accounts</h3>
+  <table class="tbl"><tr><th>Login ID</th><th>Name</th><th>Role</th><th>Password set?</th><th>Status</th><th></th></tr>
+  ${d.staff.map(a=>`<tr><td><b>${esc(a.loginId)}</b></td><td>${esc(a.name)}</td><td>${esc(a.role)}</td><td>${a.hasPassword?'Haan':'Nahi — Admin set kare'}</td><td>${a.active?'Active':'Band'}</td>
+    <td><button class="btn-ghost" data-spw="${esc(a.loginId)}">Set password</button> ${a.role!=='admin'?`<button class="btn-ghost" data-sact="${esc(a.loginId)}" data-cur="${a.active}">${a.active?'Deactivate':'Activate'}</button>`:''}</td></tr>`).join('')}</table>
+  <p class="small">Teacher accounts ke passwords Muse version se transfer nahi hue hain (wo suraksha ke liye kabhi record nahi kiye gaye) — yahan se har teacher ka password set karke unhe dein.</p></div>
+  <div class="card" style="margin-top:14px"><h3 class="font-display">Parent Accounts (${d.parents.length})</h3><p class="small">Parent accounts ki poori list aur link/unlink ke liye Parent Logins tab dekhein.</p></div>`;
+  $$('[data-spw]').forEach(b=>b.onclick=async()=>{ const pw = prompt(b.dataset.spw + ' ke liye naya password (kam se kam 6 characters):'); if(!pw) return; try{ await api('/api/accounts', {method:'POST', body: JSON.stringify({ action:'set-staff-password', loginId: b.dataset.spw, password: pw })}); pageAccounts(); }catch(e){ alert(e.message); } });
+  $$('[data-sact]').forEach(b=>b.onclick=async()=>{ await api('/api/accounts', {method:'POST', body: JSON.stringify({ action:'set-active', loginId: b.dataset.sact, active: b.dataset.cur!=='true' })}); pageAccounts(); });
+}
+
+// ---------------- Home Page CMS ----------------
+async function pageHomeCms(){
+  const d = await api('/api/home');
+  $('#page').innerHTML = secTitle('Home Page','होम पेज') + `
+  <div class="card"><p class="small">Home page ka saara content (hero, stats, profile facts, facilities, streams, contact, footer) yahan JSON me edit hota hai. Dhyaan se badlein — galat JSON save nahi hoga.</p>
+  <textarea class="input" id="cmsJson" rows="22" style="font-family:monospace;font-size:12px">${esc(JSON.stringify(d.content, null, 2))}</textarea>
+  <div style="margin-top:10px"><button class="btn-primary" id="cmsSave">Save home page</button> <span id="cmsMsg"></span></div></div>
+  <div class="card" style="margin-top:14px"><h3 class="font-display">Staff — home page par dikhayein / chhupayein</h3>
+  ${d.staff.map(t=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>${esc(t.name)} · ${esc(t.post)}</span></div>`).join('')}
+  <p class="small">Kisi staff ko home se chhupana Teachers tab ke "Home page" button se hota hai (record delete nahi hota).</p></div>`;
+  $('#cmsSave').onclick = async ()=>{ try{ const content = JSON.parse($('#cmsJson').value); await api('/api/home-content', {method:'PUT', body: JSON.stringify({ content })}); showMsg('cmsMsg','Home page save ho gaya.','ok'); }catch(e){ showMsg('cmsMsg','Galti: '+e.message,'err'); } };
+}
+
+// ---------------- My Account ----------------
+async function pageAccount(){
+  $('#page').innerHTML = secTitle('My Account','मेरा खाता') + `
+  <div class="card" style="max-width:520px"><p><b>${esc(ME.name)}</b> · ${esc(ME.role)} · ${esc(ME.loginId)}</p>
+  <label class="lbl">Current password</label><input class="input" id="pwCur" type="password">
+  <label class="lbl" style="margin-top:10px">New password</label><input class="input" id="pwNew" type="password">
+  <div id="pwMsg"></div>
+  <button class="btn-primary" id="pwBtn" style="margin-top:14px">Change password</button></div>`;
+  $('#pwBtn').onclick = async ()=>{ try{ await api('/api/change-password', {method:'POST', body: JSON.stringify({ current: $('#pwCur').value, next: $('#pwNew').value })}); ME.mustChange = false; showMsg('pwMsg','Password badal gaya.','ok'); }catch(e){ showMsg('pwMsg', e.message, 'err'); } };
+}
+
+// ---------------- Parent pages ----------------
+let parentKids = [], curChild = null;
+async function loadKids(){
+  const d = await api('/api/my-children');
+  parentKids = d.children;
+  if (!curChild && parentKids.length) curChild = parentKids[0].srno;
+}
+function childChips(){
+  return parentKids.length > 1 ? `<div style="display:flex;gap:6px;margin-bottom:14px">${parentKids.map(k=>`<button class="tab-btn ${curChild===k.srno?'active':''}" data-child="${k.srno}">${esc(k.name)} (Class ${k.classNum})</button>`).join('')}</div>` : '';
+}
+function bindChips(renderFn){ $$('[data-child]').forEach(b=>b.onclick=()=>{ curChild = Number(b.dataset.child); renderFn(); }); }
+function remarkBanner(s){ return s.remark ? `<div style="border:2px solid var(--danger);background:var(--danger-bg);border-radius:12px;padding:12px 14px;margin-bottom:14px"><div style="font-weight:700;text-transform:uppercase;color:var(--danger);font-size:13px">Teacher's Remark · शिक्षक की टिप्पणी</div><div>${esc(s.remark)}</div></div>` : ''; }
+async function pageMyChild(){
+  await loadKids();
+  const el = $('#page');
+  if (!parentKids.length) { el.innerHTML = secTitle('My Child','मेरा बच्चा') + '<p>Koi bachcha linked nahi hai. School Admin se sampark karein.</p>'; return; }
+  const d = await api('/api/child/' + curChild);
+  const s = d.student;
+  el.innerHTML = secTitle('My Child','मेरा बच्चा') + childChips() + remarkBanner(s) + `
+  <div class="card"><h3 class="font-display">${esc(s.name)} · Class ${s.classNum}-${esc(s.section)}</h3>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+      ${[['SRNO',s.srno],['Roll',s.roll],['DOB',s.dob],['Father',s.father],['Mother',s.mother],['Category',s.category],['PEN',s.pen||'—'],['NIC Id',s.nicId||'—'],['Attendance',(s.workingDays?Math.round(s.presentDays/s.workingDays*1000)/10:0)+'% ('+s.presentDays+'/'+s.workingDays+' din)']].map(([k,v])=>`<div><span class="small">${k}</span><br><b>${esc(v)}</b></div>`).join('')}
+    </div>
+    ${d.monthly.length?`<h4 class="font-display" style="margin-top:14px">Monthly Attendance</h4><table class="tbl"><tr><th>Month</th><th>Working</th><th>Present</th><th>%</th></tr>${d.monthly.map(m=>`<tr><td>${esc(m.month)}</td><td>${m.workingDays}</td><td>${m.presentDays}</td><td>${m.workingDays?Math.round(m.presentDays/m.workingDays*1000)/10:0}%</td></tr>`).join('')}</table>`:''}
+  </div>
+  <div class="card" style="margin-top:14px"><h3 class="font-display">Admit Card · एडमिट कार्ड</h3>
+    ${d.admitCards.length ? d.admitCards.map(c=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>${esc(c.examLabel||'Admit Card')} · ${esc(c.fileName)} · ${esc(c.uploadedDate||'')}</span>${c.hasFile?`<a class="btn-ghost" href="/api/admit-cards/${c.id}/file" target="_blank" style="text-decoration:none">View / Download</a>`:'<span class="pill pill-warn">File school se milegi</span>'}</div>`).join('') : '<p class="small">Abhi koi admit card nahi hai — school exam se pehle yahan upload karega.</p>'}
+  </div>`;
+  bindChips(pageMyChild);
+}
+function resultCard(r){
+  if (!r.result || !r.result.hasResult) return `<div class="card" style="margin-top:12px"><b>${esc(r.exam.name)}</b> · <span class="pill pill-warn">Result not available</span></div>`;
+  const x = r.result;
+  return `<div class="card" style="margin-top:12px"><h3 class="font-display">${esc(r.exam.name)}</h3>
+  <table class="tbl"><tr><th>Subject</th><th>Marks</th><th>Max</th></tr>
+  ${r.exam.subjects.map(s=>`<tr><td>${esc(s.name)}</td><td>${x.marks[s.name]===null||x.marks[s.name]===undefined?'—':x.marks[s.name]}</td><td>${s.max}</td></tr>`).join('')}
+  <tr><td><b>Total</b></td><td><b>${x.total}</b></td><td><b>${x.maxTotal}</b></td></tr></table>
+  <p style="margin-top:8px"><span class="pill pill-ok">${x.pct}% · Grade ${x.grade} · ${x.division} Division</span></p></div>`;
+}
+async function pageParentResults(){
+  await loadKids();
+  const el = $('#page');
+  if (!parentKids.length) { el.innerHTML = secTitle('Results','परिणाम') + '<p>Koi bachcha linked nahi hai.</p>'; return; }
+  const d = await api('/api/child/' + curChild);
+  const withMarks = d.results.filter(r=>r.result && r.result.hasResult);
+  el.innerHTML = secTitle('Results','परिणाम') + childChips() + remarkBanner(d.student) + `
+  ${withMarks.length?`<div class="card"><h3 class="font-display">Progress across exams</h3>${withMarks.map(r=>`<div class="bar-row"><span class="bl">${esc(r.exam.name)}</span><div class="bar-track"><div class="bar-fill" style="width:${r.result.pct}%"></div></div><b>${r.result.pct}%</b></div>`).join('')}</div>`:''}
+  <div style="margin-top:14px"><label class="lbl">Exam chunein</label><select class="input" id="pExamSel">${d.results.map((r,i)=>`<option value="${i}">${esc(r.exam.name)}</option>`).join('')}</select></div>
+  <div id="pExamBody"></div>`;
+  bindChips(pageParentResults);
+  function show(){ const i = Number($('#pExamSel').value || 0); $('#pExamBody').innerHTML = d.results.length ? resultCard(d.results[i]) : '<p class="small" style="margin-top:12px">Abhi koi published result nahi hai.</p>'; }
+  if ($('#pExamSel')) $('#pExamSel').onchange = show;
+  show();
+}
+async function pageParentBoard(){
+  await loadKids();
+  const el = $('#page');
+  if (!parentKids.length) { el.innerHTML = secTitle('Board Results','बोर्ड परिणाम') + '<p>Koi bachcha linked nahi hai.</p>'; return; }
+  const d = await api('/api/child/' + curChild);
+  el.innerHTML = secTitle('Board Results','बोर्ड परिणाम') + childChips() + remarkBanner(d.student) +
+  (d.board.length ? d.board.map(r=>{
+    if (!r.result || !r.result.hasResult) return `<div class="card" style="margin-top:12px"><b>Class ${r.boardExam.classNum} Board ${esc(r.boardExam.session)}</b> · <span class="pill pill-warn">Board result not published yet / marks nahi bhare</span></div>`;
+    const x = r.result;
+    return `<div class="card" style="margin-top:12px"><h3 class="font-display">Class ${r.boardExam.classNum} Board · ${esc(r.boardExam.session)}</h3>
+    <p class="small">Board Roll No.: <b>${esc(x.boardRollNo||'—')}</b></p>
+    <table class="tbl"><tr><th>Subject</th><th>Marks</th><th>Max</th></tr>
+    ${r.boardExam.subjects.map(s=>`<tr><td>${esc(s.name)}</td><td>${x.marks[s.name]===null||x.marks[s.name]===undefined?'—':x.marks[s.name]}</td><td>${s.max}</td></tr>`).join('')}
+    <tr><td><b>Total</b></td><td><b>${x.total}</b></td><td><b>${x.maxTotal}</b></td></tr></table>
+    <p style="margin-top:8px"><span class="pill pill-ok">${x.pct}% · ${x.division} Division · ${x.status}</span></p></div>`;
+  }).join('') : '<p class="small">Board result not published yet.</p>');
+  bindChips(pageParentBoard);
+}
+
+// ---------------- Boot ----------------
+(async function(){
+  try { ME = await api('/api/me'); startShell(); }
+  catch(e){ renderPublic(); }
+})();
+
+</script>
+</body>
+</html>
